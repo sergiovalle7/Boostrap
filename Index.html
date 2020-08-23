@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Practica tablas en bootstrap</h1>
+        <h2>Alumnos del curso</h2>
+        <form action="javascript:void(0)">
+            <input type="text" name="" id="nombre" placeholder="Nombre" required="Ingresar nombre">
+            <input type="text" name="" id="apellido" placeholder="Apellido" required="Ingresar apellido">
+            <input type="number" name="" id="edad" placeholder="Edad" required="Ingresar edad">
+            <input type="button" value="Agregar" class="btn btn-success" onclick="Agregar()">
+            
+        </form>
+        <table class="table">
+            <thead>
+                <th><strong>Nombre</strong></th>
+                <th><strong>Apellido</strong></th>
+                <th><strong>Edad</strong></th>
+                <th><strong>Borrar</strong></th>
+                <th><strong>Editar</strong></th>
+            </thead>
+            <tbody id="lista"></tbody>
+        </table>
+    </div>
+    <script>
+        
+        var Alumnos = [
+            {"nombre" : "Alexandra", "apellido" : "Castro", "edad": 25}, 
+            {"nombre" : "Carlos", "apellido" : "Perez", "edad" : 15 }, 
+            {"nombre" : "Emanuel", "apellido" : "Gonzales", "edad" : 20 }, 
+           
+       ]
+        function mostrar(){
+            document.getElementById("lista").innerHTML=""
+                for (var i = 0; i < Alumnos.length; i++) {
+                    document.getElementById("lista").innerHTML+= `
+                            <td id="edit_name-${i}">${Alumnos[i].nombre}</td>
+                            <td id="edit_lastname-${i}">${Alumnos[i].apellido}</td>
+                            <td id="edit_ege-${i}">${Alumnos[i].edad}</td>
+                            <td id="cancel-${i}"><button onclick="borrar(${i})" class="btn btn-danger">Eliminar</button></td>
+                            <td id="save-${i}"><button onclick="editar(${i})" class="btn btn-primary">Editar</button></td>
+                        `;
+                }
+        }
+ 
+        function Agregar(){
+            
+            var name = document.getElementById("nombre").value;
+            var lastname = document.getElementById("apellido").value;
+            var ege = document.getElementById("edad").value;
+             
+            document.getElementById("edad").value= ""
+            document.getElementById("nombre").value=""
+            document.getElementById("apellido").value=""
+
+            if( name.length >=2 && lastname.length >=2 && ege != NaN){
+                var alumno_nuevo = {"nombre": name, "apellido": lastname, "edad": ege}
+                Alumnos.push(alumno_nuevo)
+                swal("Agregado!", "Añadiste un alumno!", "success");
+                
+            }
+            else {
+                swal ( "Error" ,  "Debe tener mas de 2 caracteres!" ,  "error" )
+            }
+            mostrar();
+           
+        }
+        function borrar(index){
+            Alumnos.splice(index,1);
+            mostrar();
+        }
+        function editar(index){ 
+            document.getElementById('edit_name-'+index).innerHTML = `<input id='editar-nombre' type='text' value="${Alumnos[index].nombre}">`;
+	        document.getElementById('edit_lastname-'+index).innerHTML = `<input id='editar-apellido' type='text' value="${Alumnos[index].apellido}">`;
+	        document.getElementById('edit_ege-'+index).innerHTML = `<input id='editar-edad' type='number' value="${Alumnos[index].edad}">`;
+            document.getElementById("cancel-"+index).innerHTML= `<button onclick="cancelar()" class="btn btn-danger">Cancelar</button>`
+            document.getElementById("save-"+index).innerHTML=`<button onclick="guardar(${index})" class="btn btn-success">Guardar</button>`;
+
+        }
+            
+            
+
+        function cancelar(){
+           mostrar();
+        }
+        function guardar(index){
+            var name = document.getElementById("editar-nombre").value;
+            var lastname = document.getElementById("editar-apellido").value;
+            var ege = document.getElementById("editar-edad").value;
+             
+            if( name.length >=2 && lastname.length >=2 && ege != NaN){
+                 Alumnos[index] = {"nombre": name, "apellido": lastname, "edad": ege}
+                
+                swal("modificado!", "Modificaste un alumno!", "success");
+                
+            }
+            else {
+                swal ( "Error" ,  "Debe tener mas de 2 caracteres!" ,  "error" )
+            }
+            
+            mostrar();
+        }
+        mostrar();
+    </script>
+</body>
+</html>
+
